@@ -6,6 +6,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputAction? action;
   final bool obscureText;
   final TextEditingController? controller;
+  final String? Function(String? value)? validator;
 
   const TextFieldWidget({
     required this.label,
@@ -13,13 +14,15 @@ class TextFieldWidget extends StatelessWidget {
     this.inputType,
     this.action,
     this.controller,
+    this.validator,
     this.obscureText = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      validator: validator,
       style: const TextStyle(color: Colors.white),
       keyboardType: inputType,
       textInputAction: action,

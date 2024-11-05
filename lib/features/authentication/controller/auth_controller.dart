@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:machine_test_karthik/core/utils/snackbar_utils.dart';
 import 'package:machine_test_karthik/features/authentication/services/auth_services.dart';
+import 'package:machine_test_karthik/main.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:go_router/go_router.dart';
 
 part 'auth_controller.g.dart';
 
@@ -13,7 +16,11 @@ class AuthController extends _$AuthController {
     try {
       await AuthServices.signInWithEmailAndPassword(email, password);
 
+      App.navigatorKey.currentContext!.go()
+
       SnackbarUtils.showMessage('Login Successful');
+    } on FirebaseAuthException catch (e) {
+      SnackbarUtils.showMessage(e.message ?? '');
     } catch (e) {
       SnackbarUtils.showMessage('Login Failed. Try again');
     }
@@ -24,6 +31,8 @@ class AuthController extends _$AuthController {
       await AuthServices.signUpWithEmailAndPassword(email, password);
 
       SnackbarUtils.showMessage('Sign Up Successful');
+    } on FirebaseAuthException catch (e) {
+      SnackbarUtils.showMessage(e.message ?? '');
     } catch (e) {
       SnackbarUtils.showMessage('Sign Up Failed. Try again');
     }
