@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:machine_test_karthik/core/utils/snackbar_utils.dart';
 import 'package:machine_test_karthik/features/authentication/services/auth_services.dart';
-import 'package:machine_test_karthik/features/weather/view/pages/homepage.dart';
+import 'package:machine_test_karthik/features/weather/view/pages/weather_page.dart';
 import 'package:machine_test_karthik/main.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:go_router/go_router.dart';
