@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$WeatherControllerState {
   Position? get currentLocation => throw _privateConstructorUsedError;
-  WeatherResponseModel? get weatherData => throw _privateConstructorUsedError;
+  Future<WeatherResponseModel>? get weatherData =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of WeatherControllerState
   /// with the given fields replaced by the non-null parameter values.
@@ -32,7 +33,8 @@ abstract class $WeatherControllerStateCopyWith<$Res> {
           $Res Function(WeatherControllerState) then) =
       _$WeatherControllerStateCopyWithImpl<$Res, WeatherControllerState>;
   @useResult
-  $Res call({Position? currentLocation, WeatherResponseModel? weatherData});
+  $Res call(
+      {Position? currentLocation, Future<WeatherResponseModel>? weatherData});
 }
 
 /// @nodoc
@@ -62,7 +64,7 @@ class _$WeatherControllerStateCopyWithImpl<$Res,
       weatherData: freezed == weatherData
           ? _value.weatherData
           : weatherData // ignore: cast_nullable_to_non_nullable
-              as WeatherResponseModel?,
+              as Future<WeatherResponseModel>?,
     ) as $Val);
   }
 }
@@ -76,7 +78,8 @@ abstract class _$$WeatherControllerStateImplCopyWith<$Res>
       __$$WeatherControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Position? currentLocation, WeatherResponseModel? weatherData});
+  $Res call(
+      {Position? currentLocation, Future<WeatherResponseModel>? weatherData});
 }
 
 /// @nodoc
@@ -105,7 +108,7 @@ class __$$WeatherControllerStateImplCopyWithImpl<$Res>
       weatherData: freezed == weatherData
           ? _value.weatherData
           : weatherData // ignore: cast_nullable_to_non_nullable
-              as WeatherResponseModel?,
+              as Future<WeatherResponseModel>?,
     ));
   }
 }
@@ -119,7 +122,7 @@ class _$WeatherControllerStateImpl implements _WeatherControllerState {
   @override
   final Position? currentLocation;
   @override
-  final WeatherResponseModel? weatherData;
+  final Future<WeatherResponseModel>? weatherData;
 
   @override
   String toString() {
@@ -153,13 +156,13 @@ class _$WeatherControllerStateImpl implements _WeatherControllerState {
 abstract class _WeatherControllerState implements WeatherControllerState {
   const factory _WeatherControllerState(
           {required final Position? currentLocation,
-          required final WeatherResponseModel? weatherData}) =
+          required final Future<WeatherResponseModel>? weatherData}) =
       _$WeatherControllerStateImpl;
 
   @override
   Position? get currentLocation;
   @override
-  WeatherResponseModel? get weatherData;
+  Future<WeatherResponseModel>? get weatherData;
 
   /// Create a copy of WeatherControllerState
   /// with the given fields replaced by the non-null parameter values.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:machine_test_karthik/features/todo/view/pages/todopage.dart';
+import 'package:machine_test_karthik/features/todo/view/pages/todo_page.dart';
 import 'package:machine_test_karthik/features/weather/controller/weather_controller.dart';
 import 'package:machine_test_karthik/features/weather/view/widgets/search_field_widget.dart';
 
@@ -10,6 +10,8 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final weatherData = ref.watch(weatherControllerProvider);
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
@@ -26,57 +28,86 @@ class HomePage extends HookConsumerWidget {
                   .searchWeatherData,
             ),
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Text(
-                      '0',
-                      style: TextStyle(
-                        fontSize: 140,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: -25,
+          FutureBuilder(
+              future: weatherData.weatherData,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Expanded(
+                    child: Center(
                       child: Text(
-                        'o',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 40,
-                            fontWeight: FontWeight.w600),
+                        'Cannot load weather data. Try again',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    )
-                  ],
-                ),
-                Transform.translate(
-                  offset: const Offset(0, -20),
-                  child: const Text(
-                    'Palakkad',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
                     ),
-                  ),
-                ),
-                Transform.translate(
-                  offset: const Offset(0, -20),
-                  child: const Text(
-                    'Cloudy',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 202, 202, 202),
+                  );
+                }
+
+                if (!snapshot.hasData && weatherData.weatherData != null) {
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
+                  );
+                }
+
+                return Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Text(
+                            weatherData.weatherData == null
+                                ? '-'
+                                : snapshot.data!.current!.tempC.toString(),
+                            style: const TextStyle(
+                              fontSize: 140,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const Positioned(
+                            top: 0,
+                            right: -25,
+                            child: Text(
+                              'o',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          )
+                        ],
+                      ),
+                      Transform.translate(
+                        offset: const Offset(0, -20),
+                        child: Text(
+                          weatherData.weatherData == null
+                              ? 'Current Location\n(${weatherData.currentLocation?.latitude ?? 0}, ${weatherData.currentLocation?.longitude ?? 0})'
+                              : snapshot.data!.location!.name.toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      if (weatherData.weatherData != null)
+                        Transform.translate(
+                          offset: const Offset(0, -20),
+                          child: Text(
+                            snapshot.data!.current!.condition!.text.toString(),
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 202, 202, 202),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
+                );
+              }),
           const SizedBox(height: 120),
         ],
       ),

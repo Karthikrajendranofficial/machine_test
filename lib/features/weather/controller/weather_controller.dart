@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:machine_test_karthik/features/weather/models/weather_model.dart';
+import 'package:machine_test_karthik/features/weather/services/weather_api_services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'weather_controller.g.dart';
@@ -10,7 +11,7 @@ part 'weather_controller.freezed.dart';
 class WeatherControllerState with _$WeatherControllerState {
   const factory WeatherControllerState({
     required Position? currentLocation,
-    required WeatherResponseModel? weatherData,
+    required Future<WeatherResponseModel>? weatherData,
   }) = _WeatherControllerState;
 }
 
@@ -26,7 +27,11 @@ class WeatherController extends _$WeatherController {
     );
   }
 
-  Future<void> searchWeatherData(String location) async {}
+  Future<void> searchWeatherData(String location) async {
+    final weatherData = WeatherAPIServices.getWeather(location);
+
+    state = state.copyWith(weatherData: weatherData);
+  }
 
   Future<Position> determinePosition() async {
     bool serviceEnabled;

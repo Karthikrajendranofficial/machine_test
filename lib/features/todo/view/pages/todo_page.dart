@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machine_test_karthik/features/todo/controller/todo_controller.dart';
-import 'package:machine_test_karthik/features/todo/model/todo_model.dart';
 
-class TodoPage extends HookWidget {
+class TodoPage extends HookConsumerWidget {
   const TodoPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = useMemoized(() => TodoController());
-    final todos = useState<List<Todo>>([]);
+  Widget build(BuildContext context, ref) {
+    final todoState = ref.watch(todoControllerProvider);
+    final todoTitleController = TextEditingController();
 
     void addTodo() {
-      String newTodoTitle = '';
+      todoTitleController.text = '';
 
       showDialog(
         context: context,
@@ -20,25 +19,25 @@ class TodoPage extends HookWidget {
           return AlertDialog(
             title: const Text('Add Todo'),
             content: TextField(
-              onChanged: (value) {
-                newTodoTitle = value;
-              },
+              controller: todoTitleController,
               decoration: const InputDecoration(hintText: 'Enter todo title'),
             ),
             actions: [
               TextButton(
                 onPressed: () {
-                  controller.addTodo(newTodoTitle);
-                  todos.value = List.from(controller.todos); // Update state
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('Add'),
-              ),
-              TextButton(
-                onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
                 },
                 child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  ref
+                      .read(todoControllerProvider.notifier)
+                      .addTodo(todoTitleController.text);
+
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Add'),
               ),
             ],
           );
@@ -47,7 +46,7 @@ class TodoPage extends HookWidget {
     }
 
     void updateTodo(int index) {
-      String updatedTitle = todos.value[index].title;
+      todoTitleController.text = todoState[index].title;
 
       showDialog(
         context: context,
@@ -55,26 +54,24 @@ class TodoPage extends HookWidget {
           return AlertDialog(
             title: const Text('Update Todo'),
             content: TextField(
-              onChanged: (value) {
-                updatedTitle = value;
-              },
+              controller: todoTitleController,
               decoration: const InputDecoration(hintText: 'Update todo title'),
-              controller: TextEditingController(text: todos.value[index].title),
             ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  controller.updateTodo(index, updatedTitle);
-                  todos.value = List.from(controller.todos); // Update state
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('Update'),
-              ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
                 },
                 child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref
+                      .read(todoControllerProvider.notifier)
+                      .updateTodo(index, todoTitleController.text);
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('Update'),
               ),
             ],
           );
@@ -92,17 +89,16 @@ class TodoPage extends HookWidget {
             actions: [
               TextButton(
                 onPressed: () {
-                  controller.deleteTodo(index);
-                  todos.value = List.from(controller.todos); // Update state
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('Delete'),
-              ),
-              TextButton(
-                onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
                 },
                 child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  ref.read(todoControllerProvider.notifier).deleteTodo(index);
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: const Text('Delete'),
               ),
             ],
           );
@@ -111,13 +107,18 @@ class TodoPage extends HookWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Todo List'),
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+      ),
       backgroundColor: Colors.black,
       body: ListView.builder(
-        itemCount: todos.value.length,
+        itemCount: todoState.length,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(
-              todos.value[index].title,
+              todoState[index].title,
               style: const TextStyle(color: Colors.white),
             ),
             trailing: Row(
