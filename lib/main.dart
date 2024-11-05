@@ -7,10 +7,9 @@ import 'package:machine_test_karthik/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  await GetStorage.init();
 
   runApp(const ProviderScope(child: App()));
 }
