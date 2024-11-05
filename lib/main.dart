@@ -20,6 +20,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
+      theme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
       scaffoldMessengerKey: scaffoldMessengerKey,
     );
   }

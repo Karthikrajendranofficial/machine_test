@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914725456949",
+    "project_id": "karthik-machine-test",
+    "storage_bucket": "karthik-machine-test.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914725456949:android:821a0546bbf3d34051757c",
+        "android_client_info": {
+          "package_name": "com.example.machine_test_karthik"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl4QEh2QSHFlmBLtxygKXEe0zT4WyAXl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
